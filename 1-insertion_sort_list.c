@@ -4,73 +4,39 @@
  *                       in ascending order
  * @list: The pointer to a pointer to the head of a list
  */
+
 void insertion_sort_list(listint_t **list)
 {
-    listint_t *next_node;
-    listint_t *prev_node;
     listint_t *current;
+    listint_t *tmp;
 
-    if (list == NULL || *list == NULL || (*list)->next == NULL)
+    if (!list || !*list || !(*list)->next)
         return;
 
-    current = (*list)->next; /* Starting from the second node */
+    current = (*list)->next;
 
-    while (current != NULL){
-
-        prev_node = current->prev;
-        next_node = current->next;
+    while(current)
+    {
+        tmp = current;
+        current = current->next;
 
         /* Find the correct position to insert the current node */
-        while (prev_node != NULL && prev_node->n > current->n)
+        while(tmp->prev && tmp->prev->n > tmp->n)
         {
-            prev_node = prev_node->prev;
-        }
-        /* If current node in correct position, move to next node */
-        if(prev_node == current->next)
-        {
-            current = next_node;
-            continue;
-        }
-        /* Remove the current node from its position */
-        if(current->next != NULL)
-        {
-            current->next->prev = current->prev;
-        }
-        if(current->prev != NULL)
-        {
-            current->prev->next = current->next;
-        }
-        else
-        {
-            *list = current->next;
-        }
+            /* Swap the tmp with its previous node */
+            tmp->prev->next = tmp->next;
+            if(tmp->next)
+                tmp->next->prev = tmp->prev;
 
-        /* Insert the current node into its correct position */
-        if(prev_node != NULL)
-        {
-            prev_node->next = current;
-        }
-        else
-        {
-            *list = current;
-        }
+            tmp->next = tmp->prev;
+            tmp->prev = tmp->prev->prev;
+            tmp->next->prev = tmp;
 
-        current->prev = prev_node;
-        current->next = prev_node != NULL ? prev_node->next : NULL;
-
-        if (prev_node != NULL)
-        {
-            prev_node->next = current;
+            /* if tmp becomes the new head of the list update *list */
+            if(!tmp->prev)
+                *list = tmp;
+            else
+             tmp->prev->next = tmp;
         }
-
-        if (current->next != NULL)
-        {
-            current->next->prev = current;
-        }
-        
-        /* Move to the next unsorted node */
-        current = next_node;
-
-        /* Print the list after each swap action */
     }
 }
