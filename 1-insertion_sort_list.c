@@ -6,12 +6,15 @@
  */
 void insertion_sort_list(listint_t **list)
 {
-    if (list == NULL || *list == NULL || (*list)->next == NULL)
-        return;
 
-    listint_t *current = (*list)->next; /* Starting from the second node */
+    listint_t *current;
+    current = (*list)->next;
+
     listint_t *prev_node;
     listint_t *next_node;
+
+    if (list == NULL || *list == NULL || (*list)->next == NULL)
+        return;
 
     while (current != NULL){
 
